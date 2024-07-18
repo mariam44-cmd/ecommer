@@ -1,0 +1,36 @@
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+   
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: rgb(250, 247, 247);
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+é
+.container .block {
+    position: relative;
+    width: 5vw; 
+    height: 5vw; 
+    background: url('meilleur-site-ecommerce.jpg');
+    background-repeat: no-repeat;
+   
+    background-size: cover;
+  
+    background-attachment: fixed; 
+    background-position: absolute;
+       
+    transform-style: preserve-3d;
+} 
