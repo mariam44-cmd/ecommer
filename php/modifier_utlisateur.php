@@ -1,7 +1,7 @@
 <?php
 session_start();
-include 'config.php';
-include 'db.php';
+include '../config.php';
+include '../db.php';
 
 try {
     $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_password);
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_user'])) {
 </head>
 <body>
 <h2>Modifier Utilisateur</h2>
-<form action="modifier_utilisateur.php" method="POST">
+<form action="modifier_utlisateur.php" method="POST">
     <input type="hidden" name="entity_id" value="<?php echo $entity_id; ?>">
     <div class="mb-3">
         <label for="username" class="form-label">Nom d'utilisateur</label>

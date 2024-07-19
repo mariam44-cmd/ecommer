@@ -1,5 +1,6 @@
 <?php
 session_start();
+include '../db.php';
 
 // Vérification de l'authentification de l'utilisateur
 if (!isset($_SESSION['user'])) {
@@ -32,8 +33,8 @@ try {
         $description = $_POST['description'] ?? '';
         $price = $_POST['price'] ?? '';
         $quantity = $_POST['quantity'] ?? '';
-        $category_id = $_POST['category_id'] ?? '';
-        $seller_id = $user['id'];
+        $categoryId = $_POST['category_id'] ?? '';
+        $sellerId = $user['id'];
 
         // Traitement de l'image
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -51,14 +52,37 @@ try {
                 $uniqueFileName = uniqid('image_') . '.' . $fileExtension;
                 $destination = $uploadDir . $uniqueFileName;
 
-                // Déplacer le fichier téléchargé vers le répertoire de destination
-                if (move_uploaded_file($fileTmpPath, $destination)) {
+                // Fonction pour redimensionner l'image
+                function resizeImage($file, $width, $height, $output, $fileExtension) {
+                    list($originalWidth, $originalHeight) = getimagesize($file);
+                    $src = imagecreatefromstring(file_get_contents($file));
+                    $dst = imagecreatetruecolor($width, $height);
+                    imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+
+                    switch ($fileExtension) {
+                        case 'jpg':
+                        case 'jpeg':
+                            imagejpeg($dst, $output);
+                            break;
+                        case 'png':
+                            imagepng($dst, $output);
+                            break;
+                    }
+                    imagedestroy($src);
+                    imagedestroy($dst);
+                }
+
+                // Redimensionner l'image à 300x300 pixels et déplacer vers le répertoire de destination
+                resizeImage($fileTmpPath, 300, 300, $destination, $fileExtension);
+
+                // Vérifier si le fichier redimensionné existe dans le répertoire de destination
+                if (file_exists($destination)) {
                     // Insertion du produit dans la base de données avec le nom unique du fichier
                     $requete = $connexion->prepare('INSERT INTO products (name, description, price, quantity, image, category_id, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
-                    $requete->execute([$name, $description, $price, $quantity, $uniqueFileName, $category_id, $seller_id]);
+                    $requete->execute([$name, $description, $price, $quantity, $uniqueFileName, $categoryId, $sellerId]);
 
                     // Redirection après l'insertion des données
-                    header('Location: afficher_enregistrements.php?id=' . $seller_id);
+                    header('Location: afficher_enregistrements.php?id=' . $sellerId);
                     exit();
                 } else {
                     echo "Erreur lors du déplacement du fichier téléchargé.";

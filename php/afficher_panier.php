@@ -3,7 +3,7 @@
 
 <?php
 session_start();
-include 'db.php';
+include '../db.php';
 
 // Vérification de l'authentification de l'utilisateur
 // if (!isset($_SESSION['user'])) {
@@ -77,6 +77,7 @@ try {
 </head>
 <body>
 <div class="container mt-5">
+<a href="seller_page.php"class="btn btn-dark my-2"><</a>
     <h1 class="mb-4">Mon Panier</h1>
     <?php if ($cart_items): ?>
         <table class="table table-hover">

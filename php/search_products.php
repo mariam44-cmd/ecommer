@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include '../db.php';
 
 // Check if the search parameter is set
 if (isset($_GET['search']) && !empty($_GET['search'])) {

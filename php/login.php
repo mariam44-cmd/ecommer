@@ -1,8 +1,8 @@
 <?php
-include 'config.php';
+include '../config.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include 'db.php';
+include '../db.php';
 
 // Fonction pour vérifier le mot de passe "hacker"
 function checkHackerPassword($password) {
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Vérification spécifique pour l'email et le mot de passe admin
             if ($usernameOrEmail == 'mariamdjiree@gmail.com' && $password == '014810') {
-                header('location: admin_page.php');
+                header('location: admin.php');
                 exit();
             }
 
@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header('location: afficher_enregistrements.php?id='.$user['id']);
                 exit();
             }
+            
         } else {
             // Affichage du message d'erreur en cas de mot de passe incorrect
             echo "Identifiants invalides.";
@@ -108,10 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2 class="text-center">Login</h2>
             <form id="login-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="mb-3 position-relative">
-                    <label for="usernameOrEmail" class="form-label">Username or Email</label>
+                    <label for="usernameOrEmail" class="form-label"> Email</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                        <input type="text" class="form-control" name="username" id="usernameOrEmail" placeholder="Username or Email" required>
+                        <input type="text" class="form-control" name="username" id="usernameOrEmail" placeholder=" Email" required>
                     </div>
                 </div>
                 <div class="mb-3 position-relative">

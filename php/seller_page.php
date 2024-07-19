@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php';
+include '../db.php';
 // Vérification de l'authentification de l'utilisateur
 // if (!isset($_SESSION['user'])) {
 //     // Redirection vers la page de connexion si l'utilisateur n'est pas authentifié
@@ -12,11 +12,10 @@ include 'db.php';
 $user = $_SESSION['user'];
 
 // Vérification si l'utilisateur est un vendeur
-if ($user['role'] !== 'seller') {
-//     // Redirection vers une autre page si l'utilisateur n'est pas un vendeur
-    header('Location: afficher_enregistrements.php'); // Changer le chemin selon vos besoins
-   exit();
- }
+ if ($user['role'] !== 'seller') {     // Redirection vers une autre page si l'utilisateur n'est pas un vendeur
+  header('Location: afficher_enregistrements.php'); // Changer le chemin selon vos besoins
+  exit();
+}
 
 // Connexion à la base de données
 $host = 'localhost';
@@ -84,9 +83,11 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container fade-in slide-in">
         <div class="card">
+        <a href="login.php" class="btn btn-dark"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></a>
             <div class="card-body">
-                <h2 class="card-title">Ajouter un Produit</h2>
-                <a href="afficher_enregistrements.php"class=" btn btn-dark "><h2>voir mes produits</h2></a>
+           
+                <a href="afficher_enregistrements.php"class=" btn btn-outline-dark"><i class="fa-solid fa-share"></i></a>
+                <h2 class="card-title text-center">Ajouter un Produit</h2>
                 <form action="traitement_formulaire.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="image" class="form-label">Image :</label>
@@ -118,7 +119,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </select>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-outline-primary">
+                        <button type="submit" class="btn btn-outline-dark">
                             <i class="fas fa-plus"></i> Ajouter
                         </button>
                        

@@ -11,35 +11,34 @@ session_start();
 
 
 // Connexion à la base de données
-include 'config.php';
-include 'db.php';
+include '../config.php';
+include '../db.php';
 try {
     $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Erreur de connexion : " . $e->getMessage();
     exit();
-}if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete'])) {
-  // Vérifiez les autorisations si nécessaire
-  $idToDelete = $_POST['id']; // Récupérez l'ID à supprimer depuis le formulaire
-
-  // Code pour supprimer l'élément de la base de données
-  // Assurez-vous que $pdo est votre connexion PDO à la base de données
-  $pdo = new PDO("mysql:host=localhost;dbname=votre_base_de_donnees", "utilisateur", "mot_de_passe");
-  
-  $sql = "DELETE FROM produits WHERE id = :id";
-  $stmt = $pdo->prepare($sql);
-  $stmt->bindParam(':id', $idToDelete);
-  
-  if ($stmt->execute()) {
-      // Redirection après suppression réussie
-      header("Location: admin.php");
-      exit();
-  } else {
-      // Gestion des erreurs si la suppression échoue
-      echo "Erreur lors de la suppression de l'élément.";
-  }
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == "delete" && isset($_POST['entity_type']) && $_POST['entity_type'] == "product") {
+    $idToDelete = $_POST['id'];
+    $sql = "DELETE FROM products WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $idToDelete);
+
+    if ($stmt->execute()) {
+        header("Location: admin.php");
+        exit();
+    } else {
+        echo "Erreur lors de la suppression de l'élément.";
+    }
+}
+
+// Récupération des données des produits
+$queryProducts = $db->query("SELECT * FROM products");
+$products = $queryProducts->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Traitement des actions de l'administrateur
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -283,7 +282,7 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
 
 
         nav {
-            position: relative;
+            position: absolute;
             top: 0;
             bottom: 0;
             height: 7100px;
@@ -344,9 +343,6 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
             vertical-align: middle;
         }
 
-        nav ul li a:hover {
-            background: #eee;
-        }
 
         nav:hover {
             width: 280px;
@@ -376,27 +372,47 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
                 </a>
             </li>
             <li>
-                <a href="#idUses">
+                <a href="#idUsers">
                     <i data-feather="user" class="icon"></i>
                     <span class="nav-item">utilisateur</span>
                 </a>
             </li>
             <li>
-                <a href="#idCategories">
-                    <i data-feather="book" class="icon"></i>
-                    <span class="nav-item">categories</span>
-                </a>
-            </li>
-            <li>
-                <a href="#idPayements">
-                    <i data-feather="clipboard" class="icon"></i>
-                    <span class="nav-item"produits>payments</span>
-                </a>
-            </li>
-            <li>
                 <a href="#idProducts">
+                    <i data-feather="book" class="icon"></i>
+                    <span class="nav-item">Produits</span>
+                </a>
+            </li>
+            <li>
+                <a href="#idComments">
+                    <i data-feather="clipboard" class="icon"></i>
+                    <span class="nav-item"produits>Commentaires</span>
+                </a>
+            </li>
+            <li>
+                <a href="#idCategories">
                     <i data-feather="mail" class="icon"></i>
-                    <span class="nav-item">Contact</span>
+                    <span class="nav-item">Categories</span>
+                </a>
+            </li>
+            <li>
+            <a href="#idPayements">
+                    <i data-feather="mail" class="icon"></i>
+                    <span class="nav-item">payments</span>
+                </a>
+            </li>
+     >
+            <li>
+            <a href="#idAajouterU">
+                    <i data-feather="mail" class="icon"></i>
+                    <span class="nav-item">Ajouter un utilisateur</span>
+                </a>
+            </li>
+       
+            <li>
+            <a href="#idAjouterC">
+                    <i data-feather="mail" class="icon"></i>
+                    <span class="nav-item">Ajouter une categorie</span>
                 </a>
             </li>
             <li>
@@ -443,13 +459,9 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
                 <button type="submit" class="btn btn-success btn-sm">modifier</button>
                
             </form>
-            <!-- <form action="admin.php" method="POST" style="display:inline;">
-                <input type="hidden" name="entity_id" value="<?php echo htmlspecialchars($user['id']); ?>">
-                <input type="hidden" name="entity_type" value="user">
-                <input type="hidden" name="action" value="validate">
-                <button type="submit" class="btn btn-success btn-sm">Valider</button>
-            </form>
-            <form action="supprimer_utilisateur.php" method="POST" style="display:inline;"> -->
+             
+            
+            <form action="supprimer_utilisateur.php" method="POST" style="display:inline;"> 
                 <input type="hidden" name="entity_id" value="<?php echo htmlspecialchars($user['id']); ?>">
                 <input type="hidden" name="entity_type" value="user">
                 <input type="hidden" name="action" value="delete">
@@ -485,18 +497,13 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
         <td><img src="uploaded_images/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" width="50"></td>
         <td><?php echo $product['seller_id']; ?></td>
         <td>
-            <form action="supprimer_produit.php" method="POST" style="display:inline;">
-                <input type="hidden" name="entity_id" value="<?php echo $product['id']; ?>">
+            <form action="" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<?php echo $product['id']; ?>">
                 <input type="hidden" name="entity_type" value="product">
                 <input type="hidden" name="action" value="delete">
                 <button type="submit" class="btn btn--outline-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
     </form>
-    <form action="modifier_produit.php" method="POST" style="display:inline;">
-                <input type="hidden" name="entity_id" value="<?php echo $product['id']; ?>">
-                <input type="hidden" name="entity_type" value="product">
-                <input type="hidden" name="action" value="delete">
-                <button type="submit" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
-    </form>
+  
         </td>
     </tr>
     <?php endforeach; ?>
@@ -527,18 +534,13 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
         <td><?php echo htmlspecialchars($comment['created_at']); ?></td>
       
         <td>
-            <form action="supprimer_produit.php" method="POST" style="display:inline;">
+            <form action="" method="POST" style="display:inline;">
                 <input type="hidden" name="entity_id" value="<?php echo htmlspecialchars($comment['id']); ?>">
                 <input type="hidden" name="entity_type" value="comment">
                 <input type="hidden" name="action" value="delete">
                 <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
             </form>
-            <form action="admin.php" method="POST" style="display:inline;">
-                <input type="hidden" name="entity_id" value="<?php echo htmlspecialchars($comment['id']); ?>">
-                <input type="hidden" name="entity_type" value="comment">
-                <input type="hidden" name="action" value="validate">
-                <button type="submit" class="btn btn-success btn-sm">Valider</button>
-            </form>
+            
         </td>
     </tr>
     <?php endforeach; ?>
@@ -645,30 +647,8 @@ $cart_items = $queryPayments->fetchAll(PDO::FETCH_ASSOC);
     </table><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </div>
 
-
-
-<!-- Ajout d'un utilisateur (formulaire exemple) -->
-<h2 class="ajouter_utilisateur">Ajouter un Utilisateur</h2>
-<form action="admin.php" method="POST" class="my-4">
-    <input type="hidden" name="entity_type" value="user">
-    <input type="hidden" name="action" value="add">
-    <div class="mb-3">
-        <label for="username" class="form-label">Nom d'utilisateur</label>
-        <input type="text" class="form-control" id="username" name="username">
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email">
-    </div>
-    <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <input type="text" class="form-control" id="role" name="role">
-    </div>
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-</form><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
 <!-- Ajout d'une catégorie (formulaire exemple) -->
-<h2 >Ajouter une Catégorie</h2>
+<h2 id="idAjouterC" >Ajouter une Catégorie</h2>
 <form action="admin.php" method="POST" class="my-4">
     <input type="hidden" name="entity_type" value="category">
     <input type="hidden" name="action" value="add">

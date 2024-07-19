@@ -1,6 +1,6 @@
 <?php
 // Inclure le fichier de configuration de la base de données
-include 'config.php'; 
+include '../config.php'; 
 
 // Configuration pour afficher les erreurs PHP
 error_reporting(E_ALL);
@@ -168,6 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select name="role" class="form-select" required>
                                 <option value="seller">Seller</option>
                                 <option value="buyer">Buyer</option>
+                                
                             </select>
                         </div>
                         <button type="submit" class="btn btn-outline-primary w-100">Register</button>

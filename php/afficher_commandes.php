@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include '../db.php';
 session_start();
 
 // Décommenter les lignes suivantes si vous devez restreindre l'accès uniquement aux utilisateurs administrateurs
@@ -13,7 +13,16 @@ try {
     $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $requete = $connexion->prepare("
-        SELECT orders.id as order_id, orders.order_date, users.username, products.name, orders.quantity, products.price
+        SELECT 
+            orders.id as order_id, 
+            orders.order_date, 
+            orders.status,
+            users.username, 
+            users.email, 
+            users.numero, 
+            products.name, 
+            orders.quantity, 
+            products.price
         FROM orders
         JOIN users ON orders.user_id = users.id
         JOIN products ON orders.product_id = products.id
@@ -43,14 +52,17 @@ try {
                 <tr>
                     <th>Commande ID</th>
                     <th>Date de la commande</th>
+                    <th>Statut</th>
                     <th>Utilisateur</th>
-                    <th>Produit</th>   
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Produit</th>
                     <th>Quantité</th>
                     <th>Prix Unitaire</th>
                     <th>Total</th>
                 </tr>
             </thead>
-            <tbody>  
+            <tbody>
                 <?php $current_order_id = null; ?>
                 <?php foreach ($orders as $order): ?>
                     <tr>
@@ -58,14 +70,17 @@ try {
                             <?php $current_order_id = $order['order_id']; ?>
                             <td><?php echo htmlspecialchars($order['order_id']); ?></td>
                             <td><?php echo htmlspecialchars($order['order_date']); ?></td>
+                            <td><?php echo htmlspecialchars($order['status']); ?></td>
                             <td><?php echo htmlspecialchars($order['username']); ?></td>
+                            <td><?php echo htmlspecialchars($order['email']); ?></td>
+                            <td><?php echo htmlspecialchars($order['numero']); ?></td>
                         <?php else: ?>
-                            <td colspan="3"></td>
+                            <td colspan="6"></td>
                         <?php endif; ?>
                         <td><?php echo htmlspecialchars($order['name']); ?></td>
                         <td><?php echo htmlspecialchars($order['quantity']); ?></td>
-                        <td><?php echo htmlspecialchars($order['price']); ?> €</td>
-                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> €</td>
+                        <td><?php echo htmlspecialchars($order['price']); ?> Cfa</td>
+                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> Cfa</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -73,11 +88,7 @@ try {
     <?php else: ?>
         <p>Aucune commande trouvée.</p>
     <?php endif; ?>
-    <a href="admin_dashboard.php" class="btn btn-primary">Retour au tableau de bord</a>
+    <a href="admin.php" class="btn btn-info">Retour au tableau de bord</a>
 </div>
 </body>
 </html>
-
-
-
-

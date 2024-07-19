@@ -83,7 +83,7 @@ try {
 
             header('Location: afficher_enregistrements.php');
             exit();
-        } else {
+        } else {  
             die("Vous n'êtes pas autorisé à modifier ce produit.");
         }
     } else {

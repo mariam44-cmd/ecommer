@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-include 'config.php';
-include 'db.php';
+include '../config.php';
+include '../db.php';
 
 // Vérification de l'authentification de l'utilisateur
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit();
-}
+// if (!isset($_SESSION['user'])) {
+//     header('Location: login.php');
+//     exit();
+// }
 $user = $_SESSION['user'];
 $user_id = $_SESSION['user']['id'];
 $user_role = $_SESSION['user']['role'];
@@ -94,11 +94,14 @@ try {
                 transform: scale(1.1);
             }
         }
+       
 </style>
 <body>
 <div class="">
     <?php if ($user_role == 'seller'): ?>
-        <a href="ordersV.php" class="btn btn-info my-2">Voir les commandes</a> 
+        <a href="seller_page.php"class="btn btn-dark my-2"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></a>
+        <a href="ordersV.php" class="btn btn-dark my-2">Voir les commandes</a> 
+        
     <?php endif; ?>
     <?php if ($user_role == 'buyer'): ?>
         <header class="header" id="header">
@@ -106,12 +109,16 @@ try {
                 
                 <div class="">
                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
-                    <a href="manage_orders.php" class="btn btn-outline-dark my-2">Tes commandes</a>
-                        <a href="/" class="logo">
+                   <a href="login.php"><i class="fa-solid fa-person-walking-arrow-loop-left"></i></a>
+                    <a href="manage_orders.php" class="btn btn-outline-dark my-2"><i class="fa-solid fa-truck"></i></a>
+                    
+                        <a href="afficher_enregistrements.php" class="logo">
                             <img src="../image/logo.png" alt="" width="100px">
                         </a>
                         <form action="search_products.php" method="GET" id="search-form" class="d-flex flex-grow-1 mx-3">
                             <input type="text" class="form-control form-control-lg flex-grow-1" id="search-input" name="search" placeholder="Rechercher des produits">
+                            </form>
+                            <form action="" method="GET" name="category_id" id="category_id" >
                             <select class="form-select ms-2" id="category_id" name="category_id" style="width: auto;">
                                 <option value="">Catégories</option>
                                 <?php foreach ($categories as $category): ?>
@@ -122,7 +129,7 @@ try {
                                 <?php endforeach; ?>
                             </select>
                             <button type="submit" class="btn btn-light ms-2" name="filter">Filtrer</button>
-                        </form>
+                            </form>
                         <div class="icons d-flex">
                             <a href="login.php" class="icon me-3">
                                 <i class="bx bx-user"></i>
@@ -138,30 +145,58 @@ try {
                     <hr class="my-1">
                     <div class="d-flex justify-content-start flex-wrap">
                         <ul class="nav-list d-flex flex-wrap">
+                       
                             <li class="nav-item me-5 mb-2">
-                                <a href="afficher_enregistrements.php" class="nav-link">Accueil</a>
-                            </li>
-                           
-                            <li class="nav-item me-5 mb-2">
-                                <a href="terms_php" class="nav-link">Conditions</a>
+                                
+                                <a href="conditions.php" class="nav-link">Conditions</a>
                             </li>
                             <li class="nav-item me-5 mb-2">
-                                <a href="propos_du_site.php" class="nav-link">À propos</a>
+                                <a href="Apropos.php" class="nav-link">À propos</a>
                             </li>
                             <li class="nav-item me-5 mb-2">
-                                <a href="vous_pouvez_contactez.php" class="nav-link">Contact</a>
+                                <a href="contact.php" class="nav-link">Contact</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
             
-            <div class=" image-container r">
+            <div class=" image-container ">
               
            
             <img src="..\image\255-800x450.jpeg" alt="" width=""> 
             </div>
         </header>
+    <?php endif; ?>
+    <?php if ($user_role == 'seller'):?>
+        <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+            <div class="container">
+                <a class="navbar-brand nav-link" href="afficher_enregistrements.php">Ma Belle Boutique</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="seller_page.php">Accueil <span class="sr-only">(current)</span></a>
+                        </li>
+                      
+                        <li class="nav-item">
+                            <a class="nav-link" href="Apropos">À propos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.php">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+
+
     <?php endif; ?>
     <?php if ($user_role == 'buyer'): ?>
     <div class="mil text-center">
@@ -214,7 +249,7 @@ try {
         </div>
     </div>
 </div>
-<?php if ($user_role == 'buyer'): ?>
+
  
    
 <!-- Contact -->
@@ -222,17 +257,17 @@ try {
     <div class="row">
         <div class="col">
             <h2>EXCELLENT SUPPORT</h2>
-            <p>We love our customers and they can reach us any time of day. We will be at your service 24/7.</p>
+            <p>Nous aimons nos clients et ils peuvent nous contacter à tout moment de la journée. Nous serons à votre service 24h/24, 7 jours sur 7.</p>
             <a href="" class="btn btn-1">Contact</a>
         </div>
         <div class="col">
-            <form action="commenter_produit.php" method="post">
-                <div class="newLetter">
-                    <input type="hidden" name="product_id" value="1">
-                    <textarea name="comment" placeholder="laissez-nous un commentaire"></textarea>
-                    <button type="submit" name="comment" value="Commenter"> envoyer</button>
-                </div>
-            </form>
+        <form action="ajouter_commentaire.php" method="post">
+    <div class="newLetter">
+        <input type="hidden" name="product_id" value="1"> <!-- This should be dynamic based on the product being viewed -->
+        <textarea name="comment" class="form-control" placeholder="laissez-nous un commentaire"></textarea>
+        <button type="submit" class="btn btn-dark my-2">Envoyer</button>
+    </div>
+</form>
         </div>
     </div>
 </section>
@@ -241,15 +276,12 @@ try {
     <div class="row">
         <div class="col d-flex">
             <h4>INFORMATIONS</h4>
-            <a href="propos_du_site.php">A propos de nous</a>
-            <a href="vous_pouvez_contactez.php">Contact nous</a>
-            <a href="terms_php">Term & Conditions</a>
-            <a href="">Shopping Guide</a>
+            <a href="Apropos.php">A propos de nous</a>
+            <a href="contact.php">Contact nous</a>
+            <a href="conditions.php">Term & Conditions</a>
+            <a href="shopG.php">Shopping Guide</a>
         </div>
-        <div class="col d-flex">
-            <h4>Utilite</h4>
-            <a href="">Online Store</a>
-        </div>
+        
         <div class="col d-flex">
             <span><i class='bx bxl-facebook-square'></i></span>
             <span><i class='bx bxl-instagram-alt' ></i></span>
@@ -259,7 +291,10 @@ try {
         </div>
     </div>
 </footer>
-<?php endif; ?>
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
 <script src="../js/slider.js"></script>
 <script src="../js/index.js"></script>

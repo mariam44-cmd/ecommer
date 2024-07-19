@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include '../db.php';
 session_start();
 
 // Vérifiez si l'utilisateur est connecté et est un acheteur
@@ -13,12 +13,23 @@ try {
     $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $requete = $connexion->prepare("
-        SELECT orders.id as order_id, orders.order_date, orders.status, products.name, orders.quantity, products.price
+        SELECT 
+            orders.id as order_id, 
+            orders.order_date, 
+            orders.status, 
+            products.name as product_name, 
+            orders.quantity, 
+            products.price,
+            users.username as seller_name,
+            users.email as seller_email,
+            users.numero as seller_numero
         FROM orders
         JOIN products ON orders.product_id = products.id
+        JOIN users ON products.seller_id = users.id
         WHERE orders.user_id = :user_id
         ORDER BY orders.order_date DESC
     ");
+  
     $requete->execute(['user_id' => $_SESSION['user']['id']]);
     $orders = $requete->fetchAll();
 
@@ -37,6 +48,7 @@ try {
 </head>
 <body>
 <div class="container">
+<a href="afficher_enregistrements.php"class="btn btn-info my-2"><h4><</h4></a>
     <h1>Mes Commandes</h1>
     <?php if ($orders): ?>
         <table class="table">
@@ -49,6 +61,9 @@ try {
                     <th>Prix Unitaire</th>
                     <th>Total</th>
                     <th>Statut</th>
+                    <th>Vendeur</th>
+                    <th>Email du Vendeur</th>
+                    <th>Téléphone du Vendeur</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,11 +71,14 @@ try {
                     <tr>
                         <td><?php echo htmlspecialchars($order['order_id']); ?></td>
                         <td><?php echo htmlspecialchars($order['order_date']); ?></td>
-                        <td><?php echo htmlspecialchars($order['name']); ?></td>
+                        <td><?php echo htmlspecialchars($order['product_name']); ?></td>
                         <td><?php echo htmlspecialchars($order['quantity']); ?></td>
                         <td><?php echo htmlspecialchars($order['price']); ?> Cfa</td>
-                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> €</td>
+                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> Cfa</td>
                         <td><?php echo htmlspecialchars($order['status']); ?></td>
+                        <td><?php echo htmlspecialchars($order['seller_name']); ?></td>
+                        <td><?php echo htmlspecialchars($order['seller_email']); ?></td>
+                        <td><?php echo htmlspecialchars($order['seller_numero']); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -68,7 +86,7 @@ try {
     <?php else: ?>
         <p>Aucune commande trouvée.</p>
     <?php endif; ?>
-    <a href="buyer_page.php" class="btn btn-primary">Retour au tableau de bord</a>
+    <a href="afficher_enregistrements.php" class="btn btn-primary">Retour</a>
 </div>
 </body>
 </html>

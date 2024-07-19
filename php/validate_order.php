@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include '../db.php';
 session_start();
 
 // Vérifiez si l'utilisateur est connecté et est un vendeur

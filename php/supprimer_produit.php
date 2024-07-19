@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+include '../db.php';
 // Vérification de l'authentification de l'utilisateur
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');

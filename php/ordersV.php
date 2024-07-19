@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include '../db.php';
 session_start();
 
 // Vérifiez si l'utilisateur est connecté et est un vendeur
@@ -67,7 +67,7 @@ try {
                         <td><?php echo htmlspecialchars($order['name']); ?></td>
                         <td><?php echo htmlspecialchars($order['quantity']); ?></td>
                         <td><?php echo htmlspecialchars($order['price']); ?> Cfa</td>
-                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> €</td>
+                        <td><?php echo htmlspecialchars($order['quantity'] * $order['price']); ?> Cfa</td>
                         <td><?php echo htmlspecialchars($order['status']); ?></td>
                         <td>
                             <?php if ($order['status'] == 'pending'): ?>
@@ -86,7 +86,7 @@ try {
     <?php else: ?>
         <p>Aucune commande trouvée.</p>
     <?php endif; ?>
-    <a href="seller_page.php" class="btn btn-primary">Retour au tableau de bord</a>
+    <a href="seller_page.php" class="btn btn-info">Retour au tableau de bord</a>
 </div>
 </body>
 </html>

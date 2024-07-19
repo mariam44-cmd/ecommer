@@ -2,10 +2,10 @@
 session_start();
 
 // Vérification de l'authentification de l'utilisateur
-// if (!isset($_SESSION['user'])) {
-//     header('Location: login.php');
-//     exit();
-// }
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit();
+}
 
 // Vérification si des données ont été soumises via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_id']) && isset($_POST['comment'])) {
@@ -35,3 +35,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_id']) && isset
     echo "Requête invalide";
 }
 ?>
+

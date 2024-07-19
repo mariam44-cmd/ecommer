@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php';
+include '../db.php';
 
 // Vérification de l'authentification de l'utilisateur
 // if (!isset($_SESSION['user'])) {
@@ -94,7 +94,7 @@ try {
 </head>
 <body>
     <div class="container mt-5">
-        
+    <a href="afficher_enregistrements.php"class="btn btn-info my-2"><h4><</h4></a>
         <h1 class="mb-4">Mon Panier</h1>
         <?php if ($cart_items): ?>
             <table class="table table-hover">
@@ -125,7 +125,8 @@ try {
                                     <input type="hidden" name="action" value="remove">
                                     <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                                 </form>
-                                <a href="seller.php?seller_id=<?php echo htmlspecialchars($item['seller_id']); ?>" class="btn btn-outline-primary">Voir plut</a>
+                                <a href="seller.php?seller_id=<?php echo htmlspecialchars($item['seller_id']); ?>" class="btn btn-outline-primary">Voir plus</a>
+                           
                    
                             </td>
                         </tr>
@@ -134,17 +135,17 @@ try {
                 </tbody>
             </table>
             <div class="d-flex justify-content-end mb-3">
-                <h3>Total: <?php echo $total; ?> €</h3>
+                <h3>Total: <?php echo $total; ?> Cfa</h3>
             </div>
             <div class="d-flex justify-content-between">
                 <a href="afficher_enregistrements.php" class="btn btn-primary btn-animate">Continuer les achats</a>
-                <form action="validate_panier.php" method="POST">
-                    <button type="submit" class="btn btn-success btn-animate">Valider panier</button>
+                <form action="valider_commande.php" method="POST">
+                    <button type="submit" class="btn btn-success btn-animate">Valider</button>
                 </form>
             </div>
         <?php else: ?>
             <p>Votre panier est vide.</p>
-            <a href="afficher_enregistrements.php" class="btn btn-primary btn-animate">Continuer les achats</a>
+            <a href="afficher_enregistrements.php" class="btn btn-info btn-animate">Continuer les achats</a>
         <?php endif; ?>
     </div>
 

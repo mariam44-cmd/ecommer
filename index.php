@@ -49,10 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Redirection en fonction du rôle de l'utilisateur
             if ($user['role'] == 'seller') {
-                header('location: seller_page.php?id='.$user['id']);
+                header('location: ./php/seller_page.php?id='.$user['id']);
                 exit();
             } else if ($user['role'] == 'buyer') {
-                header('location: afficher_enregistrements.php?id='.$user['id']);
+                header('location: ./php/afficher_enregistrements.php?id='.$user['id']);
                 exit();
             }
         } else {
@@ -91,47 +91,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         align-items: center;
         justify-content: center;
     }
+ 
 
     header {
         position: fixed;
         top: 0;
         width: 100%;
         background: #333333;
-        color: white;
+        color: #333;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 20px;
+        padding: 20px 50px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         z-index: 10;
+        backdrop-filter: blur(10px);
         animation: slideDown 1s ease-in-out;
     }
 
     header .logo {
-        font-size: 20px;
+        font-size: 20px; /* Augmentation de la taille du logo */
         font-weight: bold;
         letter-spacing: 2px;
-        text-transform: uppercase;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        color: white; /* Couleur du texte du logo */
+        text-transform: uppercase; /* Texte en majuscules */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Ombre portée pour le texte */
         position: relative;
         animation: animateLogo 3s infinite alternate;
     }
 
     @keyframes animateLogo {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
 
     nav {
         display: flex;
-        gap: 20px;
+        gap: 30px;
     }
 
     nav a {
         color: #fefefe;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 18px;
         position: relative;
         transition: color 0.3s ease;
     }
@@ -157,9 +166,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     .container {
         position: relative;
-        width: 90%;
-        max-width: 1200px;
-        margin: auto;
+        width: 80%;
+        height: 80%;
         overflow: hidden;
         background-color: rgba(255, 255, 255, 0.3);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -167,7 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         border-radius: 10px;
         backdrop-filter: blur(5px);
         animation: fadeIn 2s ease-in-out;
-        padding: 20px;
     }
 
     .gradient-box {
@@ -190,19 +197,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     .image-container {
-        position: relative;
+        position: absolute;
         width: 100%;
-        height: auto;
-        overflow: hidden;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        animation: animateImage 15s linear infinite;
     }
 
     .image-container img {
         width: 100%;
-        height: auto;
+        height: 100%;
         object-fit: cover;
-        border-radius: 10px;
     }
 
+    /* .particle {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50% 10% 5%;
+        animation: animateParticle 2s linear infinite;
+    } */
     .button-container {
         display: flex;
         justify-content: center;
@@ -256,56 +273,101 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         opacity: 1;
     }
 
+
     footer {
         position: fixed;
         bottom: 0;
         width: 100%;
         background: #0f0f0f;
-        color: white;
+        color: #333;
         text-align: center;
-        padding: 10px 0;
+        padding: 20px 0;
         box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
         z-index: 10;
+        backdrop-filter: blur(10px);
         animation: slideUp 1s ease-in-out;
     }
 
     footer p {
         margin: 0;
-        font-size: 24px;
+        font-size: 14px;
+        color: white;
     }
 
     @keyframes animateBody {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
     }
 
     @keyframes animateGradient {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     @keyframes animateImage {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes animateParticle {
+        0% {
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(100vw, 100vh);
+            opacity: 0;
+        }
     }
 
     @keyframes slideDown {
-        from { transform: translateY(-100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
     }
 
     @keyframes slideUp {
-        from { transform: translateY(100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
-
     /* Responsiveness */
     @media (max-width: 768px) {
         .navbar-nav {
@@ -337,10 +399,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="nav-link" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="propos_du_site.php">About</a>
+                    <a class="nav-link" href="./php/Apropos.php">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="vous_pouvez_nous_contact.php">Contact</a>
+                    <a class="nav-link" href="./php/contact.php">Contact</a>
                 </li>
             </ul>
         </div>
@@ -350,11 +412,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container">
     <div class="gradient-box"></div>
     <div class="image-container">
-        <img src="../image/ECommerce-Fevad-2023-.jpg" alt="Animated Image">
+        <img src="./image/ECommerce-Fevad-2023-.jpg" alt="Animated Image">
     </div>
     <div class="button-container">
         <button class="button" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
-        <a href="conditions.php"><button class="button" >more</button></a>
+        <a href="./php/conditions.php"><button class="button" >more</button></a>
     </div>
 </div>
 
@@ -371,7 +433,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="username" class="form-label">Email</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Email" required>
                         </div>
                     </div>
                     <div class="mb-3 position-relative">
@@ -383,7 +445,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="mb-3 form-check">
                         <label class="form-check-label" for="rememberMe">Vous n'avez pas de compte?</label>
-                        <a href="register.php" class="float-end">Inscrivez-vous!</a>
+                        <a href="./php/register.php" class="float-end">Inscrivez-vous!</a>
                     </div>
                     <button type="submit" class="btn btn-dark w-100">Login</button>
                 </form>

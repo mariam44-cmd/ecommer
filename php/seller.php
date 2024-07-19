@@ -1,12 +1,13 @@
 <?php
 session_start();
-
+include '../db.php';
+include '../config.php';
 // Vérification de l'authentification de l'utilisateur
-// if (!isset($_SESSION['user'])) {
-//     // Redirection vers la page de connexion si l'utilisateur n'est pas authentifié
-//     header('Location: login.php');
-//     exit();
-// }
+if(!isset($_SESSION['user'])) {
+//    // Redirection vers la page de connexion si l'utilisateur n'est pas authentifié
+    header('Location: login.php');
+   exit();
+  }
 
 // Initialisation des variables
 $seller = null;
@@ -17,10 +18,11 @@ if (isset($_GET['seller_id'])) {
     $seller_id = $_GET['seller_id'];
 
     // Connexion à la base de données (à remplacer par votre propre configuration)
-    // $host = 'localhost';
-    // $dbname = 'ecommerce';
-    // $username = 'root';
-    // $password = '';
+    //
+     $host = 'localhost';
+     $dbname = 'ecommerce';
+     $username = 'root';
+     $password = '';
 
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
